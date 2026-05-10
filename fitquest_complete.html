@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitQuest - 游戏化运动激励工具</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  color: white;
+  margin-bottom: 40px;
+}
+
+.header h1 {
+  font-size: 48px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.header p {
+  font-size: 18px;
+  opacity: 0.95;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.nav-tab {
+  flex: 1;
+  min-width: 150px;
+  padding: 15px 20px;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+}
+
+.nav-tab:hover {
+  background: rgba(255,255,255,0.3);
+  transform: translateY(-2px);
+}
+
+.nav-tab.active {
+  background: white;
+  color: #667eea;
+}
+
+.content-section {
+  display: none;
+  animation: fadeIn 0.5s;
+}
+
+.content-section.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+
+.card h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #667eea;
+}
+
+.card h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #555;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.feature-box {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 25px;
+  border-radius: 12px;
+  transition: transform 0.3s;
+}
+
+.feature-box:hover {
+  transform: translateY(-5px);
+}
+
+.feature-icon {
+  font-size: 40px;
+  margin-bottom: 15px;
+}
+
+.feature-box h4 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.feature-box p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.stat-card .number {
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 5px;
+}
+
+.stat-card .label {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.user-flow {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin: 30px 0;
+}
+
+.flow-step {
+  flex: 1;
+  min-width: 150px;
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  border: 2px solid #e9ecef;
+  position: relative;
+}
+
+.flow-step .step-number {
+  background: #667eea;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  margin: 0 auto 12px;
+}
+
+.flow-step h4 {
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.flow-step p {
+  font-size: 13px;
+  color: #666;
+}
+
+.flow-arrow {
+  font-size: 24px;
+  color: #667eea;
+  flex-shrink: 0;
+}
+
+.mockup-screen {
+  background: #f8f9fa;
+  border: 8px solid #333;
+  border-radius: 24px;
+  padding: 20px;
+  max-width: 400px;
+  margin: 20px auto;
+}
+
+.mockup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.level-badge {
+  background: #ffd700;
+  color: #333;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.quest-item {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  border-left: 4px solid #667eea;
+}
+
+.quest-item h5 {
+  font-size: 15px;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.progress-bar {
+  background: #e9ecef;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.progress-fill {
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  height: 100%;
+  transition: width 0.3s;
+}
+
+.quest-reward {
+  font-size: 12px;
+  color: #ffd700;
+  font-weight: 600;
+}
+
+.social-feature {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.social-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+}
+
+.social-content {
+  flex: 1;
+}
+
+.social-content .name {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+
+.social-content .action {
+  font-size: 13px;
+  color: #666;
+}
+
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.achievement {
+  text-align: center;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  transition: transform 0.3s;
+}
+
+.achievement:hover {
+  transform: scale(1.05);
+}
+
+.achievement.locked {
+  opacity: 0.4;
+}
+
+.achievement-icon {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+.achievement-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+}
+
+.pain-point {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+}
+
+.solution {
+  background: #d1ecf1;
+  border-left: 4px solid #17a2b8;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+}
+
+.feature-list {
+  list-style: none;
+  padding: 0;
+}
+
+.feature-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.feature-list li:last-child {
+  border-bottom: none;
+}
+
+.feature-list .icon {
+  color: #667eea;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.cta-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.3s;
+  display: block;
+  margin: 30px auto;
+}
+
+.cta-button:hover {
+  transform: scale(1.05);
+}
+
+.metric-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.metric-label {
+  font-weight: 600;
+  color: #555;
+}
+
+.metric-value {
+  color: #667eea;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 32px;
+  }
+  
+  .flow-arrow {
+    display: none;
+  }
+  
+  .user-flow {
+    flex-direction: column;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>🏃‍♂️ FitQuest</h1>
+    <p>游戏化运动激励工具 - 让健身像打游戏一样上瘾</p>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showTab('overview')">产品概述</button>
+    <button class="nav-tab" onclick="showTab('pain-points')">痛点分析</button>
+    <button class="nav-tab" onclick="showTab('features')">核心功能</button>
+    <button class="nav-tab" onclick="showTab('mockup')">界面演示</button>
+    <button class="nav-tab" onclick="showTab('structure')">产品结构</button>
+  </div>
+
+  <!-- 产品概述 -->
+  <div id="overview" class="content-section active">
+    <div class="card">
+      <h2>产品定位</h2>
+      <p style="font-size: 16px; line-height: 1.8; color: #555; margin-bottom: 30px;">
+        FitQuest 是一款专为大学生设计的游戏化运动激励应用。通过 RPG 游戏机制、社交挑战和成就系统，将枯燥的运动转化为充满乐趣的冒险任务,让用户在"升级打怪"的过程中养成持续运动习惯。
+      </p>
+
+      <div class="grid-3">
+        <div class="stat-card">
+          <div class="number">85%</div>
+          <div class="label">目标用户留存率提升</div>
+        </div>
+        <div class="stat-card">
+          <div class="number">3.2x</div>
+          <div class="label">运动频率增长</div>
+        </div>
+        <div class="stat-card">
+          <div class="number">70%</div>
+          <div class="label">完成每周运动目标</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>核心价值主张</h2>
+      <div class="grid-2">
+        <div class="feature-box">
+          <div class="feature-icon">🎮</div>
+          <h4>游戏化体验</h4>
+          <p>将运动转化为角色养成游戏,通过完成任务获得经验值、金币和装备,让健身像玩游戏一样有成就感</p>
+        </div>
+        <div class="feature-box">
+          <div class="feature-icon">👥</div>
+          <h4>社交激励</h4>
+          <p>组队挑战、好友PK、运动打卡社区,通过社交压力和团队协作提升持续动力</p>
+        </div>
+        <div class="feature-box">
+          <div class="feature-icon">🏆</div>
+          <h4>成就系统</h4>
+          <p>多维度徽章收集、排行榜竞争、稀有称号获取,满足用户的炫耀心理和收集欲</p>
+        </div>
+        <div class="feature-box">
+          <div class="feature-icon">📊</div>
+          <h4>智能规划</h4>
+          <p>AI定制运动计划、科学进度追踪、个性化目标设定,让运动更科学高效</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 痛点分析 -->
+  <div id="pain-points" class="content-section">
+    <div class="card">
+      <h2>大学生运动健身痛点</h2>
+      
+      <div class="pain-point">
+        <h3>😴 痛点一:缺乏即时反馈与成就感</h3>
+        <p>运动效果需要长期积累才能显现,无法获得即时满足,容易因看不到进步而放弃。</p>
+      </div>
+      <div class="solution">
+        <h3>✅ 解决方案:游戏化即时奖励机制</h3>
+        <p>每次运动立即获得经验值、金币、装备等虚拟奖励,升级时触发炫酷动画,营造即时成就感。</p>
+      </div>
+
+      <div class="pain-point">
+        <h3>🤷 痛点二:孤独运动缺乏外部监督</h3>
+        <p>一个人运动容易懈怠,没有社交压力和陪伴,三天打鱼两天晒网。</p>
+      </div>
+      <div class="solution">
+        <h3>✅ 解决方案:社交互动与团队挑战</h3>
+        <p>建立运动小队,共同完成团队任务;好友运动动态实时可见;周排行榜激发竞争意识。</p>
+      </div>
+
+      <div class="pain-point">
+        <h3>📅 痛点三:计划不明确,容易半途而废</h3>
+        <p>不知道该做什么运动、做多久,目标模糊导致执行困难。</p>
+      </div>
+      <div class="solution">
+        <h3>✅ 解决方案:任务系统+智能推荐</h3>
+        <p>每日自动生成适配个人水平的运动任务,清晰的完成标准,分步骤引导完成。</p>
+      </div>
+
+      <div class="pain-point">
+        <h3>💤 痛点四:新鲜感消退后难以坚持</h3>
+        <p>初期热情高涨,但重复性运动很快变得枯燥,无法长期维持兴趣。</p>
+      </div>
+      <div class="solution">
+        <h3>✅ 解决方案:持续更新的内容与挑战</h3>
+        <p>每周限时活动、季节性挑战赛、稀有徽章收集,不断提供新目标激发持续兴趣。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 核心功能 -->
+  <div id="features" class="content-section">
+    <div class="card">
+      <h2>功能架构</h2>
+      
+      <h3>1. 角色养成系统</h3>
+      <ul class="feature-list">
+        <li>
+          <span class="icon">⭐</span>
+          <div>
+            <strong>等级与经验值</strong><br>
+            <span style="font-size: 14px; color: #666;">完成运动任务获得经验,升级解锁新功能和称号,最高100级</span>
+          </div>
+        </li>
+        <li>
+          <span class="icon">🎭</span>
+          <div>
+            <strong>虚拟角色定制</strong><br>
+            <span style="font-size: 14px; color: #666;">创建专属运动形象,通过运动解锁服装、配饰等装扮道具</span>
+          </div>
+        </li>
+        <li>
+          <span class="icon">💪</span>
+          <div>
+            <strong>能力属性培养</strong><br>
+            <span style="font-size: 14px; color: #666;">力量、耐力、速度、柔韧等多维属性,不同运动提升不同属性</span>
+          </div>
+        </li>
+        <li>
+          <span class="icon">🏅</span>
+          <div>
+            <strong>称号与徽章</strong><br>
+            <span style="font-size: 14px; color: #666;">达成特定成就获得限定称号(如"百日坚持者""马拉松勇士"),可在个人主页展示</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>2. 任务与挑战系统</h3>
+      <ul class="feature-list">
+        <li>
+          <span class="icon">📝</span>
+          <div>
+            <strong>每日任务</strong><br>
+            <span style="font-size: 14px; color: #666;">根据用户水平自动生成,如"完成30分钟有氧运动""做50个深蹲",完成即领奖励</span>
+          </div>
+        </li>
+        <li>
+          <span class="icon">🗓️</span>
+          <div>
+            <strong>周常任务</strong><br>
+            <span style="font-size: 14px; color: #666;">更高难度的周目标,如"本周运动5次""累计跑步10公里",奖励更丰厚</span>
+          </div>
+        </li>
+        <li>
+          <span class="icon">🎯</span>
+          <div>
+            <strong>限时挑战</strong><br>
+            <span style="font-size: 14px; color: #666;">每周更新的特殊活动,如"七日平板支撑挑战""春日跑步季",获得稀有奖励</span>
+          </div>
+        </li>
+        <li>
+          <span class="icon">🏔️</span>
+          <div>
+            <strong>长期成就</strong><br>
+            <span style="font-size: 14px; color: #666;">里程碑式目标,如"连续运动100天""累计跑步500公里",炫酷徽章永久保留</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>3. 社交互动功能</h3>
+      <ul class="feature-list">
+        <li>
+          <span class="icon">👫</span>
+          <div>
+            <strong>运动小队</strong><br>
+            <span style="font-size: 14px; color: #666;">3-5人组队,共同完成团队任务,小队经验值累积解锁团队奖励</span>
+          </div>
+        </li>
+        <li>
+          <span class="icon">⚔️</span>
+          <div>
+            <strong>好友PK</strong><br>
+            <span style="font-size: 14px; color: #666;">与好友发起运动对决,比拼本周运动量/卡路里消耗,胜者获得荣誉勋章</span>
+          </div>
+        </li>
+        <li>
+          <span class="icon">📸</span>
+          <div>
+            <strong>运动动态</strong><br>
+            <span style="font-size: 14px; color: #666;">分享运动瞬间、打卡成果,好友点赞评论,增强社交归属感</span>
+          </div>
+        </li>
+        <li>
+          <span class="icon">🏆</span>
+          <div>
+            <strong>排行榜</strong><br>
+            <span style="font-size: 14px; color: #666;">校园、城市、全国多级榜单,周榜、月榜、总榜,激发竞争意识</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>4. 智能运动规划</h3>
+      <ul class="feature-list">
+        <li>
+          <span class="icon">🤖</span>
+          <div>
+            <strong>AI训练计划</strong><br>
+            <span style="font-size: 14px; color: #666;">输入健身目标(减脂/增肌/塑形),AI生成4-12周训练方案</span>
+          </div>
+        </li>
+        <li>
+          <span class="icon">📊</span>
+          <div>
+            <strong>数据追踪</strong><br>
+            <span style="font-size: 14px; color: #666;">记录运动时长、卡路里、心率等数据,可视化图表展示进步曲线</span>
+          </div>
+        </li>
+        <li>
+          <span class="icon">🔔</span>
+          <div>
+            <strong>智能提醒</strong><br>
+            <span style="font-size: 14px; color: #666;">根据作息习惯推送运动提醒,连续未打卡时发送激励消息</span>
+          </div>
+        </li>
+        <li>
+          <span class="icon">🎥</span>
+          <div>
+            <strong>视频教程库</strong><br>
+            <span style="font-size: 14px; color: #666;">专业教练视频指导,涵盖跑步、健身、瑜伽、球类等多种运动</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 界面演示 -->
+  <div id="mockup" class="content-section">
+    <div class="card">
+      <h2>界面设计示意</h2>
+      
+      <div class="mockup-screen">
+        <div class="mockup-header">
+          <div>
+            <div class="avatar">李雷</div>
+          </div>
+          <div>
+            <div class="level-badge">⭐ Lv.18 健身学徒</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <h4 style="margin-bottom: 12px; color: #333;">今日任务 (2/3)</h4>
+          
+          <div class="quest-item">
+            <h5>✅ 晨跑30分钟</h5>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 100%;"></div>
+            </div>
+            <div class="quest-reward">+50 EXP | +20 金币</div>
+          </div>
+
+          <div class="quest-item">
+            <h5>✅ 完成50个深蹲</h5>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 100%;"></div>
+            </div>
+            <div class="quest-reward">+30 EXP | +10 金币</div>
+          </div>
+
+          <div class="quest-item">
+            <h5>⏳ 平板支撑3分钟</h5>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 45%;"></div>
+            </div>
+            <div class="quest-reward">+40 EXP | +15 金币</div>
+          </div>
+        </div>
+
+        <div>
+          <h4 style="margin-bottom: 12px; color: #333;">小队动态</h4>
+          
+          <div class="social-feature">
+            <div class="social-avatar">韩梅</div>
+            <div class="social-content">
+              <div class="name">韩梅梅</div>
+              <div class="action">刚刚完成了5公里夜跑 🔥</div>
+            </div>
+          </div>
+
+          <div class="social-feature">
+            <div class="social-avatar" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">王强</div>
+            <div class="social-content">
+              <div class="name">王强</div>
+              <div class="action">解锁成就「连续打卡7天」🏅</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p style="text-align: center; margin-top: 20px; color: #666; font-size: 14px;">
+        * 实际界面将更加精美,此处仅为功能演示
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>成就徽章示例</h2>
+      <div class="achievement-grid">
+        <div class="achievement">
+          <div class="achievement-icon">🔥</div>
+          <div class="achievement-name">七日打卡</div>
+        </div>
+        <div class="achievement">
+          <div class="achievement-icon">🏃</div>
+          <div class="achievement-name">跑步达人</div>
+        </div>
+        <div class="achievement">
+          <div class="achievement-icon">💪</div>
+          <div class="achievement-name">力量之王</div>
+        </div>
+        <div class="achievement locked">
+          <div class="achievement-icon">🏆</div>
+          <div class="achievement-name">百日坚持</div>
+        </div>
+        <div class="achievement locked">
+          <div class="achievement-icon">⚡</div>
+          <div class="achievement-name">闪电突破</div>
+        </div>
+        <div class="achievement locked">
+          <div class="achievement-icon">👑</div>
+          <div class="achievement-name">校园冠军</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 产品结构 -->
+  <div id="structure" class="content-section">
+    <div class="card">
+      <h2>用户使用流程</h2>
+      <div class="user-flow">
+        <div class="flow-step">
+          <div class="step-number">1</div>
+          <h4>注册设定目标</h4>
+          <p>填写体质数据,选择健身目标</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-number">2</div>
+          <h4>创建角色</h4>
+          <p>定制虚拟形象,选择运动类型</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-number">3</div>
+          <h4>领取任务</h4>
+          <p>每日自动刷新,选择完成</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-number">4</div>
+          <h4>运动打卡</h4>
+          <p>记录数据,拍照分享</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-number">5</div>
+          <h4>获得奖励</h4>
+          <p>经验值、金币、徽章</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-number">6</div>
+          <h4>社交互动</h4>
+          <p>好友PK,小队挑战</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>产品功能模块</h2>
+      <div class="grid-2">
+        <div>
+          <h3>核心模块</h3>
+          <ul class="feature-list">
+            <li><span class="icon">🏠</span> 首页(任务面板+数据总览)</li>
+            <li><span class="icon">🎮</span> 角色中心(等级/属性/装扮)</li>
+            <li><span class="icon">📋</span> 任务大厅(日常/周常/限时)</li>
+            <li><span class="icon">📊</span> 数据统计(运动记录/趋势分析)</li>
+          </ul>
+        </div>
+        <div>
+          <h3>社交模块</h3>
+          <ul class="feature-list">
+            <li><span class="icon">👥</span> 运动小队(创建/加入/团队任务)</li>
+            <li><span class="icon">💬</span> 动态广场(分享/点赞/评论)</li>
+            <li><span class="icon">🏆</span> 排行榜(多维度榜单)</li>
+            <li><span class="icon">⚔️</span> PK竞技场(好友对决)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>核心运营指标</h2>
+      <div class="metric-row">
+        <span class="metric-label">日活跃用户(DAU)</span>
+        <span class="metric-value">目标 > 10,000</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">次日留存率</span>
+        <span class="metric-value">目标 > 60%</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">周运动频率</span>
+        <span class="metric-value">目标 4-5 次/周</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">任务完成率</span>
+        <span class="metric-value">目标 > 70%</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">社交互动率</span>
+        <span class="metric-value">目标 > 50%</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>竞争优势</h2>
+      <div class="grid-2">
+        <div class="feature-box">
+          <div class="feature-icon">🎯</div>
+          <h4>精准定位大学生群体</h4>
+          <p>深度理解大学生作息、社交需求和心理特点,功能设计完全匹配目标用户</p>
+        </div>
+        <div class="feature-box">
+          <div class="feature-icon">🎨</div>
+          <h4>沉浸式游戏化设计</h4>
+          <p>不仅是简单的积分徽章,而是完整的RPG成长体系,让用户真正"入戏"</p>
+        </div>
+        <div class="feature-box">
+          <div class="feature-icon">🤝</div>
+          <h4>强社交属性</h4>
+          <p>小队、PK、排行榜等多元社交玩法,利用群体压力和竞争心理促进坚持</p>
+        </div>
+        <div class="feature-box">
+          <div class="feature-icon">🔄</div>
+          <h4>持续内容更新</h4>
+          <p>每周新挑战、限时活动、季节性赛事,保持长期新鲜感和参与度</p>
+        </div>
+      </div>
+    </div>
+
+    <button class="cta-button">立即体验 FitQuest →</button>
+  </div>
+
+</div>
+
+<script>
+function showTab(tabName) {
+  const tabs = document.querySelectorAll('.nav-tab');
+  const sections = document.querySelectorAll('.content-section');
+  
+  tabs.forEach(tab => tab.classList.remove('active'));
+  sections.forEach(section => section.classList.remove('active'));
+  
+  event.target.classList.add('active');
+  document.getElementById(tabName).classList.add('active');
+  
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
